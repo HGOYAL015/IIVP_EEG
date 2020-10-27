@@ -205,71 +205,41 @@ def feature_fft(matrix, period=1., mains_f=50.,
                 filter_mains=True, filter_DC=True,
                 normalise_signals=True,
                 ntop=10, get_power_spectrum=True):
-    """
-    Computes the FFT of each signal. 
 
-    Parameters:
-            matrix (numpy.ndarray): 2D [nsamples x nsignals] matrix containing the 
-            values of nsignals for a time window of length nsamples
-            period (float): width (in seconds) of the time window represented by
-            matrix
-            mains_f (float): the frequency of mains power supply, in Hz.
-            filter_mains (bool): should the mains frequency (plus/minus 1Hz) be 
-            filtered out?
-            filter_DC (bool): should the DC component be removed?
-            normalise_signals (bool): should the signals be normalised to the 
-            before interval [-1, 1] before computing the FFT?
-            ntop (int): how many of the "top N" most energetic frequencies should 
-            also be returned (in terms of the value of the frequency, not the power)
-            get_power_spectrum (bool): should the full power spectrum of each 
-            signal be returned (in terms of magnitude of each frequency component)
 
-    Returns:
-            numpy.ndarray: 1D array containing the ntop highest-power frequencies 
-            for each signal, plus (if get_power_spectrum is True) the magnitude of 
-            each frequency component, for all signals.
-            list: list containing feature names for the quantities calculated. The 
-            names associated with the power spectrum indicate the frequencies down 
-            to 1 decimal place.
-    Author:
-            Original: [fcampelo]
-    """
+    
+    N = matrix.shape[0]  
+    T = period / N       
 
-    # Signal properties
-    N = matrix.shape[0]  # number of samples
-    T = period / N        # Sampling period
-
-    # Scale all signals to interval [-1, 1] (if requested)
+    
     if normalise_signals:
         matrix = -1 + 2 * (matrix - np.min(matrix)) / \
             (np.max(matrix) - np.min(matrix))
 
-    # Compute the (absolute values of the) FFT
-    # Extract only the first half of each FFT vector, since all the information
-    # is contained there (by construction the FFT returns a symmetric vector).
+  
     fft_values = np.abs(scipy.fft.fft(matrix, axis=0))[0:N//2] * 2 / N
 
-    # Compute the corresponding frequencies of the FFT components
+    
     freqs = np.linspace(0.0, 1.0 / (2.0 * T), N//2)
 
-    # Remove DC component (if requested)
+    
     if filter_DC:
         fft_values = fft_values[1:]
         freqs = freqs[1:]
 
-    # Remove mains frequency component(s) (if requested)
+    
     if filter_mains:
         indx = np.where(np.abs(freqs - mains_f) <= 1)
         fft_values = np.delete(fft_values, indx, axis=0)
         freqs = np.delete(freqs, indx)
 
-    # Extract top N frequencies for each signal
+    
     indx = np.argsort(fft_values, axis=0)[::-1]
     indx = indx[:ntop]
 
     ret = freqs[indx].flatten(order='F')
 
-    # Make feature names
+    
     names = []
     for i in np.arange(fft_values.shape[1]):
         names.extend(['topFreq_' + str(j) + "_" + str(i)
