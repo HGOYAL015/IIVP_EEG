@@ -49,7 +49,7 @@ y = data['Label']
 print(np.shape(X))
 
 
-num_feats = 750
+num_feats = 850
 feature_name = X.columns.tolist()
 cor_support, cor_feature = cor_selector(X, y, num_feats)
 
@@ -123,7 +123,7 @@ for i in our_feature:
 
     data_length = np.shape(X_ori)[0]
     print(data_length)
-    data_length = 1000
+    data_length = 1500
     train_len = (int)(data_length*(0.7))
     test_len = (data_length-train_len)
     y_train = Y_ori[1:train_len]
