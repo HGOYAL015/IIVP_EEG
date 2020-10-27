@@ -415,6 +415,19 @@ def generate_feature_vectors_from_samples(file_path, nsamples, period,
             previous_vector = previous_vector[:-1]
 
     feat_names = ["prev_" + s for s in headers[:-1]] + headers
+    if remove_redundant:
+        # Remove redundant lag window features
+        to_rm = ["prev_mean_q3_", "prev_mean_q4_", "prev_mean_d_q3q4_",
+                 "prev_max_q3_", "prev_max_q4_", "prev_max_d_q3q4_",
+                 "prev_min_q3_", "prev_min_q4_", "prev_min_d_q3q4_"]
+
+        # Remove redundancies
+        for i in range(len(to_rm)):
+            for j in range(ry.shape[1]):
+                rm_str = to_rm[i] + str(j)
+                idx = feat_names.index(rm_str)
+                feat_names.pop(idx)
+                ret = np.delete(ret, idx, axis=1)
     print(len(ret))
     print(len(feat_names))
     return ret, feat_names
