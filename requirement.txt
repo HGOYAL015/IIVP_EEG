@@ -1,5 +1,2 @@
- numpy
- scipy
- os
- sys
+ numpy, scipy, os, sys,matplotlib,sklearn, re , pandas , csv 
 
