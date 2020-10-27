@@ -156,10 +156,10 @@ for i in our_feature:
     eeg_svc.predict(X_test)
     print("Test Accuracy:", (eeg_svc.score(X_test, y_test.ravel()))*100, "%")
     matrix = plot_confusion_matrix(eeg_svc,
-                                   X_test,
-                                   y_test,
-                                   cmap=plt.cm.Blues,
-                                   normalize='true')
+                               X_test,
+                               y_test,
+                               cmap=plt.cm.Blues,
+                               normalize='true')
     plt.title('Confusion matrix for our classifier')
 
     plt.show()
