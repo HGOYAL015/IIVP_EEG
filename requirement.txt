@@ -8,4 +8,8 @@
  pandas 
  csv 
  lightgbm
+ Pillow=2.2.2
+ nltk
+ 
+ 
 
