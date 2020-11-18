@@ -1,7 +1,7 @@
 # IIVP_EEG
 State Recognition using EEG Signal
 
-to run :-
+To run :-
 make sure you have all the requirements from the requirements.txt
 
 python3 code/EEG_feature_extraction.py
